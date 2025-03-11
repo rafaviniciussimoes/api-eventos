@@ -1,0 +1,53 @@
+import { NextFunction, Request, Response } from "express";
+import { BadRequestError, NotFoundError } from "../Erros";
+import { prisma } from "../prisma";
+
+export default class UsuarioMiddleware {
+  async checarUsuario(req: Request, res: Response, next: NextFunction) {
+    const { nome, email, senha } = req.body;
+
+    try {
+      if (!nome || !email || !senha) {
+        throw new BadRequestError("Todos os campos são obrigatórios");
+      }
+
+      const usuario = await prisma.usuario.findUnique({
+        where: { email: email },
+      });
+
+      if (usuario) {
+        throw new BadRequestError("E-mail já cadastrado");
+      }
+
+      next();
+    } catch (error) {
+      if (error instanceof BadRequestError) {
+        res.status(error.statusCode).json({ mensagem: error.message });
+      }
+
+      res.status(500).json({ mensagem: "Erro do lado do servidor" });
+    }
+  }
+
+  async deletarUsuario(req: Request, res: Response, next: NextFunction) {
+    const { id } = req.params;
+
+    try {
+      if (!id) {
+        throw new BadRequestError("O campo id é obrigatório");
+      }
+
+      const usuario = await prisma.usuario.findUnique({ where: { id: id } });
+
+      if (!usuario) {
+        throw new NotFoundError("Usuário não encontrado");
+      }
+
+      next();
+    } catch (error) {
+      if (error instanceof BadRequestError || error instanceof NotFoundError) {
+        res.status(error.statusCode).json({ mensagem: error.message });
+      }
+    }
+  }
+}
