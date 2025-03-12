@@ -30,14 +30,16 @@ export default class UsuarioMiddleware {
   }
 
   async deletarUsuario(req: Request, res: Response, next: NextFunction) {
-    const { id } = req.params;
+    const { idUsuario } = req.params;
 
     try {
-      if (!id) {
-        throw new BadRequestError("O campo id é obrigatório");
+      if (!idUsuario) {
+        throw new BadRequestError("O campo idUsuario é obrigatório");
       }
 
-      const usuario = await prisma.usuario.findUnique({ where: { id: id } });
+      const usuario = await prisma.usuario.findUnique({
+        where: { id: idUsuario },
+      });
 
       if (!usuario) {
         throw new NotFoundError("Usuário não encontrado");

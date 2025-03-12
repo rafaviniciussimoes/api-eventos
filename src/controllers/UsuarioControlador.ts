@@ -1,5 +1,6 @@
 import { Request, Response } from "express";
 import { prisma } from "../prisma";
+import { criptografarSenha } from "../utils/criptografia";
 
 export default class UsuarioControlador {
   async listarUsuarios(req: Request, res: Response): Promise<void> {
@@ -15,7 +16,7 @@ export default class UsuarioControlador {
       data: {
         nome,
         email,
-        senha,
+        senha: await criptografarSenha(senha),
       },
     });
 

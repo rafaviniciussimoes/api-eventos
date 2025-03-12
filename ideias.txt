@@ -8,11 +8,10 @@ O que a minha api vai fazer:
     [OK] Deletar um compra
     [OK] Deletar um usuario
     [OK] Deletar um evento
-    [OK] Alterar dados de uma compra
-    [OK] Alterar dados de um usuario
-    [OK] Alterar dados de um evento
+    [] Alterar dados de uma compra
+    [] Alterar dados de um usuario
+    [] Alterar dados de um evento
     [] Casdastrar usuario administrador
-    [] Criptografar as senhas com bcrypt ou similar
 
     [OK] Trasnformar meu repositorio em Orientacao a Objetos
 
@@ -20,12 +19,14 @@ O que a minha api vai fazer:
 
     [OK] Implementar container do Docker
 
-    [] Utilizar o Prisma ORM para gerenciar o banco de dados
+    [OK] Utilizar o Prisma ORM para gerenciar o banco de dados
 
-    [] Implementar persistencia no banco de dados PostgreSql
+    [OK] Implementar persistencia no banco de dados PostgreSql
+
+    [OK] Usar bcrypt para criptografar as senhas dos usuarios
 
     [] Implementar acesso à rotas sensiveis apenas para administrador
 
     [] Implementar cadastro para administrador e usuário comum separado
 
-    [] Usar bcrypt para criptografar as senhas dos usuarios
+    [] Implementar rota para login do usuario

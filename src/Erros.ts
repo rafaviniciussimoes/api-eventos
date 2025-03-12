@@ -1,3 +1,5 @@
+import { JsonWebTokenError } from "jsonwebtoken";
+
 export class BadRequestError extends Error {
   readonly statusCode: number;
 

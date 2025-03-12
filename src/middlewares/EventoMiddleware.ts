@@ -20,10 +20,10 @@ export default class EventoMiddleware {
       next();
     } catch (error) {
       if (error instanceof BadRequestError) {
-        return res.status(error.statusCode).json({ message: error.message });
+        res.status(error.statusCode).json({ message: error.message });
       }
 
-      res.status(500).json({ mensagem: "Erro do lado do servidor" });
+      res.status(500).send({ mensagem: "Erro do lado do servidor" });
     }
   }
 
@@ -32,10 +32,7 @@ export default class EventoMiddleware {
 
     try {
       if (!maxPreco) {
-        const eventos = await prisma.evento.findMany({
-          where: { preco: { lte: Number(maxPreco) } },
-        });
-        res.json(eventos);
+        throw new BadRequestError("O campo maxPreco não foi informado");
       }
 
       if (isNaN(Number(maxPreco))) {

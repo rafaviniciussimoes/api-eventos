@@ -5,20 +5,13 @@ export default class EventoControlador {
   async mostrarEvento(req: Request, res: Response) {
     const { maxPreco } = req.query;
 
-    if (maxPreco) {
-      const eventosFiltrados = await prisma.evento.findMany({
-        where: {
-          preco: {
-            lte: Number(maxPreco),
-          },
+    const eventos = await prisma.evento.findMany({
+      where: {
+        preco: {
+          lte: Number(maxPreco),
         },
-      });
-
-      res.json(eventosFiltrados);
-    }
-
-    const eventos = await prisma.evento.findMany();
-    res.json(eventos);
+      },
+    });
 
     res.json(eventos);
   }
