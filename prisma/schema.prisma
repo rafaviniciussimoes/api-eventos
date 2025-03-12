@@ -13,6 +13,8 @@ model Admin {
   email     String   @unique
   senha     String
   createdAt DateTime @default(now())
+
+  @@map("administradores")
 }
 
 model Usuario {

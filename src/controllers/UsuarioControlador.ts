@@ -20,7 +20,9 @@ export default class UsuarioControlador {
       },
     });
 
-    res.status(201).json({ ...usuario, senha: undefined });
+    console.log("Estou no controlador");
+
+    res.status(201).json(usuario);
   }
 
   async excluirUsuario(req: Request, res: Response): Promise<void> {

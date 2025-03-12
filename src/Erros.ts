@@ -1,5 +1,3 @@
-import { JsonWebTokenError } from "jsonwebtoken";
-
 export class BadRequestError extends Error {
   readonly statusCode: number;
 
@@ -33,6 +31,15 @@ export class UnauthorizedError extends Error {
   constructor(mensagem: string) {
     super(mensagem);
     this.statusCode = 401;
+  }
+}
+
+export class ConflictError extends Error {
+  readonly statusCode: number;
+
+  constructor(mensagem: string) {
+    super(mensagem);
+    this.statusCode = 409;
   }
 }
 

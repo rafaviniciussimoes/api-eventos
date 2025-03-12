@@ -11,7 +11,7 @@ O que a minha api vai fazer:
     [] Alterar dados de uma compra
     [] Alterar dados de um usuario
     [] Alterar dados de um evento
-    [] Casdastrar usuario administrador
+    [OK] Casdastrar usuario administrador
 
     [OK] Trasnformar meu repositorio em Orientacao a Objetos
 
@@ -25,8 +25,18 @@ O que a minha api vai fazer:
 
     [OK] Usar bcrypt para criptografar as senhas dos usuarios
 
-    [] Implementar acesso à rotas sensiveis apenas para administrador
+    [OK] Implementar acesso à rotas sensiveis apenas para administrador
 
-    [] Implementar cadastro para administrador e usuário comum separado
+    [OK] Implementar cadastro para administrador
 
     [] Implementar rota para login do usuario
+
+    [] Implementar filtro da listagem dos eventos
+
+    [] Testar o envio do token quando estiver expirado
+
+    [] Ver porque minha rota delete não funciona
+
+    [] Documentar a minha api
+
+    [] Fazer pull para o meu repositório

@@ -1,9 +1,14 @@
 import { Request, Response, NextFunction } from "express";
-import { BadRequestError, NotFoundError } from "../Erros";
+import {
+  BadRequestError,
+  ConflictError,
+  InternalServerError,
+  NotFoundError,
+} from "../Erros";
 import { prisma } from "../prisma";
 
 export default class EventoMiddleware {
-  async checaEvento(req: Request, res: Response, next: NextFunction) {
+  async checarEvento(req: Request, res: Response, next: NextFunction) {
     const { nome, endereco, data, preco } = req.body;
 
     try {
@@ -14,20 +19,22 @@ export default class EventoMiddleware {
       const evento = await prisma.evento.findFirst({ where: { nome: nome } });
 
       if (evento) {
-        throw new BadRequestError("Evento já cadastrado");
+        throw new ConflictError("Evento já cadastrado");
       }
 
       next();
-    } catch (error) {
-      if (error instanceof BadRequestError) {
-        res.status(error.statusCode).json({ message: error.message });
+    } catch (erro) {
+      if (
+        erro instanceof BadRequestError ||
+        erro instanceof ConflictError ||
+        erro instanceof InternalServerError
+      ) {
+        res.status(erro.statusCode).json({ message: erro.message });
       }
-
-      res.status(500).send({ mensagem: "Erro do lado do servidor" });
     }
   }
 
-  async checaPrecoEvento(req: Request, res: Response, next: NextFunction) {
+  async checarEventoPorPreco(req: Request, res: Response, next: NextFunction) {
     const { maxPreco } = req.query;
 
     try {
@@ -35,32 +42,29 @@ export default class EventoMiddleware {
         throw new BadRequestError("O campo maxPreco não foi informado");
       }
 
-      if (isNaN(Number(maxPreco))) {
+      if (isNaN(Number(maxPreco)) || Number(maxPreco) < 0) {
         throw new BadRequestError(
           "O preço máximo do evento deve conter apenas números e deve ser positivo"
         );
       }
 
-      if (Number(maxPreco) < 0) {
-        throw new BadRequestError("O preço máximo do evento deve ser positivo");
-      }
-
       next();
-    } catch (error) {
-      if (error instanceof BadRequestError) {
-        res.status(error.statusCode).json({ mensagem: error.message });
+    } catch (erro) {
+      if (
+        erro instanceof BadRequestError ||
+        erro instanceof InternalServerError
+      ) {
+        res.status(erro.statusCode).json({ mensagem: erro.message });
       }
-
-      res.status(500).json({ mensagem: "Erro do lado do servidor" });
     }
   }
 
-  async excluirEvento(req: Request, res: Response, next: NextFunction) {
-    const { idEvento } = req.params;
-
+  async deletarEvento(req: Request, res: Response, next: NextFunction) {
     try {
+      const { idEvento } = req.params;
+
       if (!idEvento) {
-        throw new BadRequestError("O campo id é obrigatório");
+        throw new BadRequestError("O parâmetro idEvento é obrigatório");
       }
 
       const evento = await prisma.evento.findFirst({ where: { id: idEvento } });
@@ -70,12 +74,14 @@ export default class EventoMiddleware {
       }
 
       next();
-    } catch (error) {
-      if (error instanceof BadRequestError || error instanceof NotFoundError) {
-        res.status(error.statusCode).json({ mensagem: error.message });
+    } catch (erro) {
+      if (
+        erro instanceof BadRequestError ||
+        erro instanceof NotFoundError ||
+        erro instanceof InternalServerError
+      ) {
+        res.status(erro.statusCode).json({ mensagem: erro.message });
       }
-
-      res.status(500).json({ mensagem: "Erro do lado do servidor" });
     }
   }
 }

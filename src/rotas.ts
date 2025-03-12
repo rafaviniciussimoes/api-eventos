@@ -7,31 +7,37 @@ import CompraControlador from "./controllers/CompraControlador";
 import CompraMiddleware from "./middlewares/CompraMiddleware";
 import { Autenticar } from "./middlewares/LoginMiddleware";
 import { GerarToken } from "./utils/GerarToken";
+import { AdminControlador } from "./controllers/AdminControlador";
+import { AdminMiddleware } from "./middlewares/AdminMiddleware";
 
 const rotas = Router();
+
+// Criar administrador do sistema
+rotas.post(
+  "/admin",
+  new AdminMiddleware().checarAdmin,
+  new AdminControlador().criarAdmin
+);
 
 // Logar no sistema
 rotas.post("/login", new GerarToken().token);
 
+// A partir daqui o admin precisa estar autenticado para acessar as rotas
 rotas.use(new Autenticar().autenticar);
 
 // Listar usuarios
-rotas.get(
-  "/usuarios",
-  new Autenticar().autenticar,
-  new UsuarioControlador().listarUsuarios
-);
+rotas.get("/usuarios", new UsuarioControlador().listarUsuarios);
 
 // Cadastrar usuarios
 rotas.post(
-  "/usuario",
+  "/usuarios",
   new UsuarioMiddleware().checarUsuario,
   new UsuarioControlador().cadastrarUsuario
 );
 
 // Deletar usuarios
 rotas.delete(
-  "/usuario/:idUsuario",
+  "/usuarios/:idUsuario",
   new UsuarioMiddleware().deletarUsuario,
   new UsuarioControlador().excluirUsuario
 );
@@ -39,35 +45,39 @@ rotas.delete(
 // Listar eventos
 rotas.get(
   "/eventos",
-  new EventoMiddleware().checaPrecoEvento,
+  new EventoMiddleware().checarEventoPorPreco,
   new EventoControlador().mostrarEvento
 );
 
 // Cadastrar eventos
 rotas.post(
-  "/evento",
-  new EventoMiddleware().checaEvento,
+  "/eventos",
+  new EventoMiddleware().checarEvento,
   new EventoControlador().cadastrarEvento
 );
 
 // Deletar eventos
 rotas.delete(
-  "/evento/:idEvento",
-  new EventoMiddleware().excluirEvento,
+  "/eventos/:idEvento",
+  new EventoMiddleware().deletarEvento,
   new EventoControlador().excluirEvento
 );
 
 // Listar compras
-rotas.get("/compras", new CompraControlador().listaCompras);
+rotas.get("/compras", new CompraControlador().listarCompras);
 
 // Cadastrar compras
 rotas.post(
-  "/compra",
-  new CompraMiddleware().checaCompra,
+  "/compras",
+  new CompraMiddleware().checarCamposCompra,
   new CompraControlador().cadastrarCompra
 );
 
 // Deletar compras
-rotas.delete("/compra/:idCompra", new CompraControlador().deletarCompra);
+rotas.delete(
+  "/compras/:idCompra",
+  new CompraMiddleware().checarCompra,
+  new CompraControlador().deletarCompra
+);
 
 export default rotas;

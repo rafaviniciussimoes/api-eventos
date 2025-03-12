@@ -3,10 +3,7 @@ import { prisma } from "../prisma";
 
 export default class CompraControlador {
   async cadastrarCompra(req: Request, res: Response): Promise<void> {
-    const { idEvento } = req.body;
-    const { comprovante } = req.query;
-
-    const idUsuario = String(comprovante).split("/")[1];
+    const { idEvento, idUsuario } = req.body;
 
     const compra = await prisma.compra.create({
       data: {
@@ -18,7 +15,7 @@ export default class CompraControlador {
     res.status(201).json(compra);
   }
 
-  async listaCompras(req: Request, res: Response): Promise<void> {
+  async listarCompras(req: Request, res: Response): Promise<void> {
     const { comprovante } = req.query;
 
     const idUsuario = String(comprovante).split("/")[1];

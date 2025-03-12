@@ -18,7 +18,11 @@ export class Autenticar {
 
       next();
     } catch (erro) {
-      if (erro instanceof BadRequestError || erro instanceof ForbbidenError) {
+      if (
+        erro instanceof BadRequestError ||
+        erro instanceof ForbbidenError ||
+        erro instanceof UnauthorizedError
+      ) {
         res.status(erro.statusCode).json({ mensagem: erro.message });
       }
 

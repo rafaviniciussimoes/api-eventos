@@ -13,22 +13,22 @@ export class GerarToken {
         throw new BadRequestError("As credenciais são obrigatórias");
       }
 
-      const usuario = await prisma.usuario.findUnique({
+      const admin = await prisma.admin.findUnique({
         where: { email: email },
       });
 
-      if (!usuario) {
-        throw new NotFoundError("Usuário não encontrado");
+      if (!admin) {
+        throw new NotFoundError("Administrador não encontrado");
       }
 
-      const senhaValida = await bcrypt.compare(senha, usuario.senha);
+      const senhaValida = await bcrypt.compare(senha, admin.senha);
 
       if (!senhaValida) {
         throw new ForbbidenError("Credenciais incorretas");
       }
 
-      const token = jwt.sign({ id: usuario.id }, `${process.env.JWT_SECRET}`, {
-        expiresIn: "2h",
+      const token = jwt.sign({ id: admin.id }, `${process.env.JWT_SECRET}`, {
+        expiresIn: "12h",
       });
 
       res.json({ token: token });

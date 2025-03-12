@@ -1,5 +1,10 @@
 import { NextFunction, Request, Response } from "express";
-import { BadRequestError, NotFoundError } from "../Erros";
+import {
+  BadRequestError,
+  ConflictError,
+  InternalServerError,
+  NotFoundError,
+} from "../Erros";
 import { prisma } from "../prisma";
 
 export default class UsuarioMiddleware {
@@ -16,16 +21,20 @@ export default class UsuarioMiddleware {
       });
 
       if (usuario) {
-        throw new BadRequestError("E-mail já cadastrado");
+        throw new ConflictError("Usuário já cadastrado");
       }
+
+      console.log("Estou no middleware");
 
       next();
-    } catch (error) {
-      if (error instanceof BadRequestError) {
-        res.status(error.statusCode).json({ mensagem: error.message });
+    } catch (erro) {
+      if (
+        erro instanceof BadRequestError ||
+        erro instanceof ConflictError ||
+        erro instanceof InternalServerError
+      ) {
+        res.status(erro.statusCode).json({ mensagem: erro.message });
       }
-
-      res.status(500).json({ mensagem: "Erro do lado do servidor" });
     }
   }
 
@@ -46,9 +55,13 @@ export default class UsuarioMiddleware {
       }
 
       next();
-    } catch (error) {
-      if (error instanceof BadRequestError || error instanceof NotFoundError) {
-        res.status(error.statusCode).json({ mensagem: error.message });
+    } catch (erro) {
+      if (
+        erro instanceof BadRequestError ||
+        erro instanceof NotFoundError ||
+        erro instanceof InternalServerError
+      ) {
+        res.status(erro.statusCode).json({ mensagem: erro.message });
       }
     }
   }

@@ -1,19 +1,19 @@
 import { NextFunction, Request, Response } from "express";
-import { BadRequestError, NotFoundError, UnauthorizedError } from "../Erros";
+import {
+  BadRequestError,
+  InternalServerError,
+  NotFoundError,
+  UnauthorizedError,
+} from "../Erros";
 import { prisma } from "../prisma";
 
 export default class CompraMiddleware {
-  async checaCompra(req: Request, res: Response, next: NextFunction) {
-    const { idEvento } = req.body;
-    const { comprovante } = req.query;
+  async checarCamposCompra(req: Request, res: Response, next: NextFunction) {
+    const { idEvento, idUsuario } = req.body;
 
     try {
-      if (!comprovante) {
-        throw new BadRequestError("O comprovante é obrigatório");
-      }
-
-      if (!idEvento) {
-        throw new BadRequestError("O identificador do evento é obrigatório");
+      if (!idEvento || !idUsuario) {
+        throw new BadRequestError("Todos os campos são obrigatórios");
       }
 
       const evento = await prisma.evento.findUnique({
@@ -24,8 +24,6 @@ export default class CompraMiddleware {
         throw new NotFoundError("Evento não encontrado");
       }
 
-      const idUsuario = String(comprovante).split("/")[1];
-
       const usuario = await prisma.usuario.findUnique({
         where: { id: idUsuario },
       });
@@ -35,24 +33,27 @@ export default class CompraMiddleware {
       }
 
       next();
-    } catch (error) {
+    } catch (erro) {
       if (
-        error instanceof BadRequestError ||
-        error instanceof NotFoundError ||
-        error instanceof UnauthorizedError
+        erro instanceof BadRequestError ||
+        erro instanceof NotFoundError ||
+        erro instanceof UnauthorizedError ||
+        erro instanceof InternalServerError
       ) {
-        res.status(error.statusCode).json({ mensagem: error.message });
+        res.status(erro.statusCode).json({ mensagem: erro.message });
       }
-
-      res.status(500).json({ mensagem: "Erro do lado do servidor" });
     }
   }
 
-  async excluirCompra(req: Request, res: Response, next: NextFunction) {
-    const { idCompra } = req.params;
-
+  async checarCompra(req: Request, res: Response, next: NextFunction) {
     try {
-      const compra = await prisma.compra.findUnique({
+      const { idCompra } = req.params;
+
+      if (!idCompra) {
+        throw new BadRequestError("Oarâmetro idCompra é obrigatório");
+      }
+
+      const compra = await prisma.compra.findFirst({
         where: { id: idCompra },
       });
 
@@ -61,12 +62,14 @@ export default class CompraMiddleware {
       }
 
       next();
-    } catch (error) {
-      if (error instanceof NotFoundError || error instanceof BadRequestError) {
-        return res.status(error.statusCode).json({ mensagem: error.message });
+    } catch (erro) {
+      if (
+        erro instanceof NotFoundError ||
+        erro instanceof BadRequestError ||
+        erro instanceof InternalServerError
+      ) {
+        res.status(erro.statusCode).json({ mensagem: erro.message });
       }
-
-      res.status(500).json({ mensagem: "Erro do lado do servidor" });
     }
   }
 }
