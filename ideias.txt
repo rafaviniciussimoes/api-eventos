@@ -40,8 +40,8 @@ O que a minha api vai fazer:
 
     [] Verificar os tipos de valores enviados na requisição
     
-    [] Documentar a api com Swagger
+    [OK] Documentar a api com Swagger
 
     [] Fazer pull para o meu repositório
 
-    [] Deploy da api
+    [] Deploy da api no Render ou Vercel

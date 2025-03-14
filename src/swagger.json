@@ -15,7 +15,76 @@
     }
   ],
   "paths": {
-    "/admin/cadastrar": {},
+    "/admin/cadastrar": {
+      "post": {
+        "summary": "Cadastro de administradores",
+        "description": "Rota para cadastrar um administrador",
+        "tags": ["Admins"],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Admins"
+              },
+              "examples": {
+                "evento": {
+                  "value": {
+                    "nome": "Rafael Vinicius",
+                    "email": "rafael@email.com",
+                    "senha": "Rafael123"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "400": {
+            "description": "Problema na requisição",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "mensagem": {
+                      "type": "string",
+                      "example": "Todos os campos são obrigatórios"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Administrador já cadastrado",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "mensagem": {
+                      "type": "string",
+                      "example": "O administrador já existe no banco de dados"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "type": "object",
+                "schema": {
+                  "$ref": "#/components/schemas/Admins"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/login": {
       "post": {
         "summary": "Login do administrador",
@@ -1068,9 +1137,9 @@
             "type": "string",
             "example": "c083d0e5-a0c5-430f-abc1-c31a3a195fcf"
           },
-          "nome": { "type": "string", "example": "Cristiano Ronaldo" },
-          "email": { "type": "string", "example": "cr7@email.com" },
-          "senha": { "type": "string", "example": "ronaldo123" }
+          "nome": { "type": "string", "example": "Rafael Vinicius" },
+          "email": { "type": "string", "example": "rafael@email.com" },
+          "senha": { "type": "string", "example": "Rafael123" }
         }
       },
       "securitySchemes": {
