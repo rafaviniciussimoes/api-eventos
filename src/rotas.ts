@@ -19,7 +19,7 @@ rotas.post(
   new AdminControlador().criarAdmin
 );
 
-// Logar no sistema
+// Logar no sistema como administrador
 rotas.post("/login", new GerarToken().token);
 
 // A partir daqui o admin precisa estar autenticado para acessar as rotas
