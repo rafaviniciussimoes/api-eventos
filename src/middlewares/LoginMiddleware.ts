@@ -1,7 +1,7 @@
 import "dotenv/config";
 import { NextFunction, Request, Response } from "express";
-import jwt, { TokenExpiredError } from "jsonwebtoken";
-import { BadRequestError, ForbbidenError, UnauthorizedError } from "../Erros";
+import jwt, { JsonWebTokenError, TokenExpiredError } from "jsonwebtoken";
+import { BadRequestError, ForbiddenError, UnauthorizedError } from "../erros";
 
 export class Autenticar {
   autenticar(req: Request, res: Response, next: NextFunction) {
@@ -20,14 +20,18 @@ export class Autenticar {
     } catch (erro) {
       if (
         erro instanceof BadRequestError ||
-        erro instanceof ForbbidenError ||
+        erro instanceof ForbiddenError ||
         erro instanceof UnauthorizedError
       ) {
         res.status(erro.statusCode).json({ mensagem: erro.message });
       }
 
       if (erro instanceof TokenExpiredError) {
-        res.status(403).json({ mensagem: "Permissão negada" });
+        res.status(401).json({ mensagem: "Token expirado" });
+      }
+
+      if (erro instanceof JsonWebTokenError) {
+        res.status(401).json({ mensagem: "Token inválido" });
       }
     }
   }

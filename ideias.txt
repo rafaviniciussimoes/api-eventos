@@ -8,10 +8,10 @@ O que a minha api vai fazer:
     [OK] Deletar um compra
     [OK] Deletar um usuario
     [OK] Deletar um evento
-    [] Alterar dados de uma compra
-    [] Alterar dados de um usuario
-    [] Alterar dados de um evento
+    [OK] Alterar dados de um usuario
+    [OK] Alterar dados de um evento
     [OK] Casdastrar usuario administrador
+    [] Listar recursos por quantidade e nome
 
     [OK] Trasnformar meu repositorio em Orientacao a Objetos
 
@@ -29,14 +29,20 @@ O que a minha api vai fazer:
 
     [OK] Implementar cadastro para administrador
 
-    [] Implementar rota para login do usuario
+    [OK] Testar o envio do token quando estiver expirado
 
-    [] Implementar filtro da listagem dos eventos
+    [OK] Ver porque minha rota delete não funciona
 
-    [] Testar o envio do token quando estiver expirado
+    [OK] Implementar filtro da listagem dos eventos
 
-    [] Ver porque minha rota delete não funciona
+    [OK] Verificar se o token enviado é válido ou se está expirado
 
-    [] Documentar a minha api
+    [] Refatorar código dentro do try/catch
+
+    [] Verificar os tipos de valores enviados na requisição
+    
+    [] Documentar a api com Swagger
 
     [] Fazer pull para o meu repositório
+
+    [] Deploy da api

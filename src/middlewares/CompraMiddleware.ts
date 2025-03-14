@@ -4,7 +4,7 @@ import {
   InternalServerError,
   NotFoundError,
   UnauthorizedError,
-} from "../Erros";
+} from "../erros";
 import { prisma } from "../prisma";
 
 export default class CompraMiddleware {
@@ -46,11 +46,11 @@ export default class CompraMiddleware {
   }
 
   async checarCompra(req: Request, res: Response, next: NextFunction) {
-    try {
-      const { idCompra } = req.params;
+    const { idCompra } = req.params;
 
+    try {
       if (!idCompra) {
-        throw new BadRequestError("Oarâmetro idCompra é obrigatório");
+        throw new BadRequestError("O parâmetro idCompra é obrigatório");
       }
 
       const compra = await prisma.compra.findFirst({

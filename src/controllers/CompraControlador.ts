@@ -27,6 +27,20 @@ export default class CompraControlador {
     res.json(compras);
   }
 
+  async listarComprasPorUsuario() {}
+
+  async atualizarCompra(req: Request, res: Response): Promise<void> {
+    const { idCompra } = req.params;
+    const { idUsuario, idEvento } = req.body;
+
+    const compraAtualizada = await prisma.compra.update({
+      where: { id: idCompra },
+      data: { usuarioId: idUsuario, eventoId: idEvento },
+    });
+
+    res.json(compraAtualizada);
+  }
+
   async deletarCompra(req: Request, res: Response): Promise<void> {
     const { idCompra } = req.params;
 

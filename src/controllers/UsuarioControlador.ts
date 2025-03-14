@@ -25,6 +25,28 @@ export default class UsuarioControlador {
     res.status(201).json(usuario);
   }
 
+  async atualizarUsuario(req: Request, res: Response) {
+    const { idUsuario } = req.params;
+    const { nome, email, senha } = req.body;
+
+    let senhaCripografada;
+
+    if (senha) {
+      senhaCripografada = await criptografarSenha(senha);
+    }
+
+    const usuarioAtualizado = await prisma.usuario.update({
+      where: { id: idUsuario },
+      data: {
+        nome,
+        email,
+        senha: senhaCripografada,
+      },
+    });
+
+    res.json(usuarioAtualizado);
+  }
+
   async excluirUsuario(req: Request, res: Response): Promise<void> {
     const { idUsuario } = req.params;
 

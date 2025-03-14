@@ -35,47 +35,64 @@ rotas.post(
   new UsuarioControlador().cadastrarUsuario
 );
 
+// Atualizar usuarios
+rotas.patch(
+  "/usuarios/:idUsuario?",
+  new UsuarioMiddleware().checaAtualizarUsuario,
+  new UsuarioControlador().atualizarUsuario
+);
+
 // Deletar usuarios
 rotas.delete(
-  "/usuarios/:idUsuario",
+  "/usuarios/:idUsuario?",
   new UsuarioMiddleware().deletarUsuario,
   new UsuarioControlador().excluirUsuario
 );
 
 // Listar eventos
 rotas.get(
-  "/eventos",
+  "/eventos/listar",
   new EventoMiddleware().checarEventoPorPreco,
-  new EventoControlador().mostrarEvento
+  new EventoControlador().listarEvento
 );
 
 // Cadastrar eventos
 rotas.post(
-  "/eventos",
+  "/eventos/cadastrar",
   new EventoMiddleware().checarEvento,
   new EventoControlador().cadastrarEvento
 );
 
+// Atualizar eventos
+rotas.patch(
+  "/eventos/atualizar/:idEvento?",
+  new EventoMiddleware().checarAtualizarEvento,
+  new EventoControlador().atualizarEvento
+);
+
 // Deletar eventos
 rotas.delete(
-  "/eventos/:idEvento",
-  new EventoMiddleware().deletarEvento,
+  "/eventos/deletar/:idEvento?",
+  new EventoMiddleware().checarDeletarEvento,
   new EventoControlador().excluirEvento
 );
 
 // Listar compras
-rotas.get("/compras", new CompraControlador().listarCompras);
+rotas.get("/compras/listar", new CompraControlador().listarCompras);
 
 // Cadastrar compras
 rotas.post(
-  "/compras",
+  "/compras/cadastrar",
   new CompraMiddleware().checarCamposCompra,
   new CompraControlador().cadastrarCompra
 );
 
+// Atualizar compras
+rotas.patch("/compras/:idCompra?", new CompraControlador().atualizarCompra);
+
 // Deletar compras
 rotas.delete(
-  "/compras/:idCompra",
+  "/compras/deletar/:idCompra?",
   new CompraMiddleware().checarCompra,
   new CompraControlador().deletarCompra
 );

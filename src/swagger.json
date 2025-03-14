@@ -1,0 +1,999 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Api Ingressos",
+    "description": "Essa api manipula eventos, usuários e compras como recursos.",
+    "contact": {
+      "email": "rafaelviniciussimoes@gmail.com"
+    },
+    "version": "1.0.0"
+  },
+  "servers": [
+    {
+      "url": "http://localhost:8001/",
+      "description": "Api de produção"
+    }
+  ],
+  "paths": {
+    "/admin/cadastrar": {},
+    "/eventos/cadastrar": {
+      "post": {
+        "summary": "Cadastro de eventos",
+        "description": "Rota para cadastrar um evento",
+        "tags": ["Eventos"],
+        "security": [{ "bearerAuth": [] }],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Eventos"
+              },
+              "examples": {
+                "evento": {
+                  "value": {
+                    "nome": "Festas das Jabuticabas",
+                    "endereco": "Rua das Jabuticabas",
+                    "data": "01/01/1001",
+                    "preco": 1000
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "400": {
+            "description": "Problema na requisição",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "mensagem": {
+                      "type": "string",
+                      "example": "Todos os campos são obrigatórios"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Não autenticado",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "mensagem": {
+                      "type": "string",
+                      "example": "Não foi passado o token para autenticação do administrador"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Evento já cadastrado",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "mensagem": {
+                      "type": "string",
+                      "example": "O evento já existe no banco de dados"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "type": "object",
+                "schema": {
+                  "$ref": "#/components/schemas/Eventos"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/eventos/listar": {
+      "get": {
+        "summary": "Listar eventos",
+        "description": "Rota para listar os eventos",
+        "tags": ["Eventos"],
+        "security": [{ "bearerAuth": [] }],
+        "parameters": [
+          {
+            "name": "maxPreco",
+            "in": "query",
+            "description": "Filtra os eventos com preço menor ou igual ao valor fornecido",
+            "required": false,
+            "schema": {
+              "type": "number",
+              "minimum": 0
+            }
+          }
+        ],
+        "responses": {
+          "400": {
+            "description": "Problema na requisição",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "mensagem": {
+                      "type": "string",
+                      "example": "O preço máximo do evento deve conter apenas números e deve ser positivo"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Não autenticado",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "mensagem": {
+                      "type": "string",
+                      "example": "Não foi passado o token para autenticação do administrador"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "type": "object",
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Eventos"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/eventos/atualizar/{idEvento}": {
+      "patch": {
+        "summary": "Atualizar eventos",
+        "description": "Rota para atualizar um evento",
+        "tags": ["Eventos"],
+        "security": [{ "bearerAuth": [] }],
+        "parameters": [
+          {
+            "name": "idEvento",
+            "in": "path",
+            "required": true,
+            "description": "Parâmetro de rota que representa o id do evento",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Eventos"
+              },
+              "examples": {
+                "evento": {
+                  "value": {
+                    "nome": "Festas das Bananas",
+                    "endereco": "Rua das Bananas",
+                    "data": "02/02/2002",
+                    "preco": 2000
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "400": {
+            "description": "Problema na requisição",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "oneOf": [
+                    {
+                      "type": "object",
+                      "properties": {
+                        "mensagem": {
+                          "type": "string",
+                          "example": "O parâmetro idEvento é obrigatório"
+                        }
+                      }
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "mensagem": {
+                          "type": "string",
+                          "example": "Nenhum campo para atualização foi informado"
+                        }
+                      }
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Não autenticado",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "mensagem": {
+                      "type": "string",
+                      "example": "Não foi passado o token para autenticação do administrador"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Evento não encontrado",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "mensagem": {
+                      "type": "string",
+                      "example": "Evento não encontrado no banco de dados"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "type": "object",
+                "schema": {
+                  "$ref": "#/components/schemas/Eventos"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/eventos/deletar/{idEvento}": {
+      "delete": {
+        "summary": "Deletar eventos",
+        "description": "Rota para deletar um evento",
+        "tags": ["Eventos"],
+        "security": [{ "bearerAuth": [] }],
+        "parameters": [
+          {
+            "name": "idEvento",
+            "in": "path",
+            "required": true,
+            "description": "Parâmetro de rota que representa o id do evento",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "400": {
+            "description": "Problema na requisição",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "mensagem": {
+                      "type": "string",
+                      "example": "O parâmetro idEvento é obrigatório"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Evento não encontrado",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "mensagem": {
+                      "type": "string",
+                      "example": "Evento não encontrado no banco de dados"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "204": {
+            "description": "Evento deletado com sucesso"
+          }
+        }
+      }
+    },
+    "/usuarios/cadastrar": {
+      "post": {
+        "summary": "Cadastro de usuários",
+        "description": "Rota para cadastrar um usuário",
+        "tags": ["Usuarios"],
+        "security": [{ "bearerAuth": [] }],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Usuarios"
+              },
+              "examples": {
+                "evento": {
+                  "value": {
+                    "nome": "Ronaldinho Gaúcho",
+                    "email": "ronaldinho@email.com",
+                    "senha": "Ronaldinho123"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "400": {
+            "description": "Problema na requisição",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "mensagem": {
+                      "type": "string",
+                      "example": "Todos os campos são obrigatórios"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Não autenticado",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "mensagem": {
+                      "type": "string",
+                      "example": "Não foi passado o token para autenticação do administrador"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Usuário já cadastrado",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "mensagem": {
+                      "type": "string",
+                      "example": "o usuário já existe no banco de dados"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "type": "object",
+                "schema": {
+                  "$ref": "#/components/schemas/Usuarios"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/usuarios/listar": {
+      "get": {
+        "summary": "Listar usuários",
+        "description": "Rota para listar todos os usuários",
+        "tags": ["Usuarios"],
+        "security": [{ "bearerAuth": [] }],
+        "responses": {
+          "401": {
+            "description": "Não autenticado",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "mensagem": {
+                      "type": "string",
+                      "example": "Não foi passado o token para autenticação do administrador"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "type": "object",
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Usuarios"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "usuarios/atualizar/{idUsuario}": {
+      "patch": {
+        "summary": "Atualizar usuários",
+        "description": "Rota para atualizar um usuário",
+        "tags": ["Usuarios"],
+        "security": [{ "bearerAuth": [] }],
+        "parameters": [
+          {
+            "name": "idUsuario",
+            "in": "path",
+            "required": true,
+            "description": "Parâmetro de rota que representa o id do usuário",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Usuarios"
+              },
+              "examples": {
+                "evento": {
+                  "value": {
+                    "nome": "Lionel Messi",
+                    "email": "messi@email.com",
+                    "senha": "lionel123"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "400": {
+            "description": "Problema na requisição",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "oneOf": [
+                    {
+                      "type": "object",
+                      "properties": {
+                        "mensagem": {
+                          "type": "string",
+                          "example": "O parâmetro idUsuario é obrigatório"
+                        }
+                      }
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "mensagem": {
+                          "type": "string",
+                          "example": "Nenhum campo para atualização foi informado"
+                        }
+                      }
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Não autenticado",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "mensagem": {
+                      "type": "string",
+                      "example": "Não foi passado o token para autenticação do administrador"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Usuário não encontrado",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "mensagem": {
+                      "type": "string",
+                      "example": "Usuário não encontrado no banco de dados"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "type": "object",
+                "schema": {
+                  "$ref": "#/components/schemas/Usuarios"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "usuarios/deletar/{idUsuario}": {
+      "delete": {
+        "summary": "Deletar usuários",
+        "description": "Rota para deletar um usuário",
+        "tags": ["Usuarios"],
+        "security": [{ "bearerAuth": [] }],
+        "parameters": [
+          {
+            "name": "idUsuario",
+            "in": "path",
+            "required": true,
+            "description": "Parâmetro de rota que representa o id do usuário",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "400": {
+            "description": "Problema na requisição",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "mensagem": {
+                      "type": "string",
+                      "example": "Não foi passado o id do usuário para deleção na url"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Usuário não encontrado",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "mensagem": {
+                      "type": "string",
+                      "example": "Usuário não encontrado no banco de dados"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "204": {
+            "description": "Usuário deletado com sucesso"
+          }
+        }
+      }
+    },
+    "compras/cadastrar": {
+      "post": {
+        "summary": "Cadastro de compras",
+        "description": "Rota para cadastrar uma compra",
+        "tags": ["Compras"],
+        "security": [{ "bearerAuth": [] }],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Compras"
+              },
+              "examples": {
+                "evento": {
+                  "value": {
+                    "idEvento": "9da3e6d8-1379-4377-8fda-710146ef4097",
+                    "idUsuario": "c083d0e5-a0c5-430f-abc1-c31a3a195fcf"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "400": {
+            "description": "Problema na requisição",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "mensagem": {
+                      "type": "string",
+                      "example": "Todos os campos são obrigatórios"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Não autenticado",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "mensagem": {
+                      "type": "string",
+                      "example": "Não foi passado o token para autenticação do administrador"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Compra já cadastrada",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "mensagem": {
+                      "type": "string",
+                      "example": "A compra já existe no banco de dados"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "type": "object",
+                "schema": {
+                  "$ref": "#/components/schemas/Compras"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "compras/listar": {
+      "get": {
+        "summary": "Listar compras",
+        "description": "Rota para listar todas as compras",
+        "tags": ["Compras"],
+        "security": [{ "bearerAuth": [] }],
+        "responses": {
+          "401": {
+            "description": "Não autenticado",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "mensagem": {
+                      "type": "string",
+                      "example": "Não foi passado o token para autenticação do administrador"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "type": "object",
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Compras"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "compras/atualizar/{idCompra}": {
+      "patch": {
+        "summary": "Atualizar compras",
+        "description": "Rota para atualizar uma compra",
+        "tags": ["Compras"],
+        "security": [{ "bearerAuth": [] }],
+        "parameters": [
+          {
+            "name": "idCompra",
+            "in": "path",
+            "required": true,
+            "description": "Parâmetro de rota que representa o id de uma compra",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Compras"
+              },
+              "examples": {
+                "evento": {
+                  "value": {
+                    "idEvento": "9da3e6d8-1379-4377-8fda-710146ef4097",
+                    "idUsuario": "c083d0e5-a0c5-430f-abc1-c31a3a195fcf"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "400": {
+            "description": "Problema na requisição",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "oneOf": [
+                    {
+                      "type": "object",
+                      "properties": {
+                        "mensagem": {
+                          "type": "string",
+                          "example": "O parâmetro idCompra é obrigatório"
+                        }
+                      }
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "mensagem": {
+                          "type": "string",
+                          "example": "Nenhum campo para atualização foi informado"
+                        }
+                      }
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Não autenticado",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "mensagem": {
+                      "type": "string",
+                      "example": "Não foi passado o token para autenticação do administrador"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Compra não encontrada",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "mensagem": {
+                      "type": "string",
+                      "example": "Compra não encontrada no banco de dados"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "type": "object",
+                "schema": {
+                  "$ref": "#/components/schemas/Compras"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "compras/deletar/{idCompra}": {
+      "delete": {
+        "summary": "Deletar compras",
+        "description": "Rota para deletar uma compra",
+        "tags": ["Compras"],
+        "security": [{ "bearerAuth": [] }],
+        "parameters": [
+          {
+            "name": "idCompra",
+            "in": "path",
+            "required": true,
+            "description": "Parâmetro de rota que representa o id da compra",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "400": {
+            "description": "Problema na requisição",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "mensagem": {
+                      "type": "string",
+                      "example": "Não foi passado o id da compra para deleção na url"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Compra não encontrada",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "mensagem": {
+                      "type": "string",
+                      "example": "Compra não encontrada no banco de dados"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "204": {
+            "description": "Compra deletada com sucesso"
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "Eventos": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "example": "c083d0e5-a0c5-430f-abc1-c31a3a195fcf"
+          },
+          "nome": { "type": "string", "example": "Festa das Bananas" },
+          "endereco": { "type": "string", "example": "Rua das Bananas" },
+          "data": {
+            "type": "string",
+            "format": "date-time",
+            "example": "04/04/2004"
+          },
+          "preco": { "type": "number", "example": 2500 }
+        }
+      },
+      "Usuarios": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "example": "c083d0e5-a0c5-430f-abc1-c31a3a195fcf"
+          },
+          "nome": { "type": "string", "example": "Lionel Messi" },
+          "email": { "type": "string", "example": "messi@email.com" },
+          "senha": { "type": "string", "example": "lionel123" }
+        }
+      },
+      "Compras": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "example": "c083d0e5-a0c5-430f-abc1-c31a3a195fcf"
+          },
+          "idUsuario": {
+            "type": "string",
+            "example": "9da3e6d8-1379-4377-8fda-710146ef4097"
+          },
+          "idEvento": {
+            "type": "string",
+            "example": "c083d0e5-a0c5-430f-abc1-c31a3a195fcf"
+          }
+        }
+      },
+      "Admins": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "example": "c083d0e5-a0c5-430f-abc1-c31a3a195fcf"
+          },
+          "nome": { "type": "string", "example": "Cristiano Ronaldo" },
+          "email": { "type": "string", "example": "cr7@email.com" },
+          "senha": { "type": "string", "example": "ronaldo123" }
+        }
+      },
+      "securitySchemes": {
+        "bearerAuth": {
+          "type": "http",
+          "scheme": "bearer",
+          "bearerFormat": "JWT"
+        }
+      }
+    }
+  }
+}

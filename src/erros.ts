@@ -16,7 +16,7 @@ export class NotFoundError extends Error {
   }
 }
 
-export class ForbbidenError extends Error {
+export class ForbiddenError extends Error {
   readonly statusCode: number;
 
   constructor(mensagem: string) {

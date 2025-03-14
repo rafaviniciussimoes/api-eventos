@@ -2,7 +2,7 @@ import { Request, Response } from "express";
 import { prisma } from "../prisma";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
-import { BadRequestError, ForbbidenError, NotFoundError } from "../Erros";
+import { BadRequestError, ForbiddenError, NotFoundError } from "../erros";
 
 export class GerarToken {
   async token(req: Request, res: Response) {
@@ -24,11 +24,11 @@ export class GerarToken {
       const senhaValida = await bcrypt.compare(senha, admin.senha);
 
       if (!senhaValida) {
-        throw new ForbbidenError("Credenciais incorretas");
+        throw new ForbiddenError("Credenciais incorretas");
       }
 
       const token = jwt.sign({ id: admin.id }, `${process.env.JWT_SECRET}`, {
-        expiresIn: "12h",
+        expiresIn: "5h",
       });
 
       res.json({ token: token });
@@ -36,7 +36,7 @@ export class GerarToken {
       if (
         erro instanceof BadRequestError ||
         erro instanceof NotFoundError ||
-        erro instanceof ForbbidenError
+        erro instanceof ForbiddenError
       ) {
         res.status(erro.statusCode).json({ mensagem: erro.message });
       }

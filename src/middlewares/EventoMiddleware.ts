@@ -4,7 +4,7 @@ import {
   ConflictError,
   InternalServerError,
   NotFoundError,
-} from "../Erros";
+} from "../erros";
 import { prisma } from "../prisma";
 
 export default class EventoMiddleware {
@@ -38,14 +38,12 @@ export default class EventoMiddleware {
     const { maxPreco } = req.query;
 
     try {
-      if (!maxPreco) {
-        throw new BadRequestError("O campo maxPreco não foi informado");
-      }
-
-      if (isNaN(Number(maxPreco)) || Number(maxPreco) < 0) {
-        throw new BadRequestError(
-          "O preço máximo do evento deve conter apenas números e deve ser positivo"
-        );
+      if (maxPreco) {
+        if (isNaN(Number(maxPreco)) || Number(maxPreco) < 0) {
+          throw new BadRequestError(
+            "O preço máximo do evento deve conter apenas números e deve ser positivo"
+          );
+        }
       }
 
       next();
@@ -59,10 +57,38 @@ export default class EventoMiddleware {
     }
   }
 
-  async deletarEvento(req: Request, res: Response, next: NextFunction) {
-    try {
-      const { idEvento } = req.params;
+  async checarAtualizarEvento(req: Request, res: Response, next: NextFunction) {
+    const { idEvento } = req.params;
+    const { nome, endereco, data, preco } = req.body;
 
+    try {
+      if (!idEvento) {
+        throw new BadRequestError("O parâmetro idEvento é obrigatório");
+      }
+
+      const evento = await prisma.evento.findFirst({ where: { id: idEvento } });
+
+      if (!evento) {
+        throw new NotFoundError("Evento não encontrado");
+      }
+
+      if (!nome && !endereco && !data && !preco) {
+        throw new BadRequestError(
+          "Nenhum campo para atualização foi informado"
+        );
+      }
+      next();
+    } catch (erro) {
+      if (erro instanceof BadRequestError || erro instanceof NotFoundError) {
+        res.status(erro.statusCode).json(erro.message);
+      }
+    }
+  }
+
+  async checarDeletarEvento(req: Request, res: Response, next: NextFunction) {
+    const { idEvento } = req.params;
+
+    try {
       if (!idEvento) {
         throw new BadRequestError("O parâmetro idEvento é obrigatório");
       }

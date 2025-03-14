@@ -1,5 +1,5 @@
 import { NextFunction, Request, Response } from "express";
-import { BadRequestError, ConflictError, InternalServerError } from "../Erros";
+import { BadRequestError, ConflictError, InternalServerError } from "../erros";
 import { prisma } from "../prisma";
 
 export class AdminMiddleware {

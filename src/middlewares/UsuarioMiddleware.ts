@@ -4,7 +4,7 @@ import {
   ConflictError,
   InternalServerError,
   NotFoundError,
-} from "../Erros";
+} from "../erros";
 import { prisma } from "../prisma";
 
 export default class UsuarioMiddleware {
@@ -38,12 +38,43 @@ export default class UsuarioMiddleware {
     }
   }
 
+  async checaAtualizarUsuario(req: Request, res: Response, next: NextFunction) {
+    const { idUsuario } = req.params;
+    const { nome, email, senha } = req.body;
+
+    try {
+      if (!idUsuario) {
+        throw new BadRequestError("O parâmetro idUsuario é obrigatório");
+      }
+
+      const usuario = await prisma.usuario.findUnique({
+        where: { id: idUsuario },
+      });
+
+      if (!usuario) {
+        throw new NotFoundError("Usuário não encontrado");
+      }
+
+      if (!nome && !email && !senha) {
+        throw new BadRequestError(
+          "Nenhum campo para atualização foi informado"
+        );
+      }
+
+      next();
+    } catch (erro) {
+      if (erro instanceof BadRequestError || erro instanceof NotFoundError) {
+        res.status(erro.statusCode).json(erro.message);
+      }
+    }
+  }
+
   async deletarUsuario(req: Request, res: Response, next: NextFunction) {
     const { idUsuario } = req.params;
 
     try {
       if (!idUsuario) {
-        throw new BadRequestError("O campo idUsuario é obrigatório");
+        throw new BadRequestError("O parâmetro idUsuario é obrigatório");
       }
 
       const usuario = await prisma.usuario.findUnique({
