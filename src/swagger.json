@@ -16,6 +16,92 @@
   ],
   "paths": {
     "/admin/cadastrar": {},
+    "/login": {
+      "post": {
+        "summary": "Login do administrador",
+        "description": "Rota para realizar o login como administrador do sistema",
+        "tags": ["Login"],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "email": { "type": "string", "example": "rafael@email.com" },
+                  "senha": { "type": "string", "example": "Rafael123" }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "400": {
+            "description": "Problema na requisição",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "mensagem": {
+                      "type": "string",
+                      "example": "Todos os campos são obrigatórios"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Administrador não encontrado",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "mensagem": {
+                      "type": "string",
+                      "example": "Administrador não encontrado no banco de dados"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Acesso negado",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "mensagem": {
+                      "type": "string",
+                      "example": "Credenciais incorretas"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "token": {
+                      "type": "string",
+                      "example": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjQyZTE2MTMxLThkOTUtNDJiZC05YzA0LTA1ZGU1MzAxMDcwNiIsImlhdCI6MTc0MTkwNTk1NywiZXhwIjoxNzQxOTIzOTU3fQ.GrAkc-bG9yb78wHz6x2cGbvLKLAsnmO-6Iseu3T1HAk"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/eventos/cadastrar": {
       "post": {
         "summary": "Cadastro de eventos",

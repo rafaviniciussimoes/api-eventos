@@ -11,7 +11,6 @@ O que a minha api vai fazer:
     [OK] Alterar dados de um usuario
     [OK] Alterar dados de um evento
     [OK] Casdastrar usuario administrador
-    [] Listar recursos por quantidade e nome
 
     [OK] Trasnformar meu repositorio em Orientacao a Objetos
 

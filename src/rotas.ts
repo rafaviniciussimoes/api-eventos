@@ -5,7 +5,7 @@ import UsuarioMiddleware from "./middlewares/UsuarioMiddleware";
 import EventoControlador from "./controllers/EventoControlador";
 import CompraControlador from "./controllers/CompraControlador";
 import CompraMiddleware from "./middlewares/CompraMiddleware";
-import { Autenticar } from "./middlewares/LoginMiddleware";
+import { Autenticar } from "./middlewares/AutenticacaoMiddleware";
 import { GerarToken } from "./utils/GerarToken";
 import { AdminControlador } from "./controllers/AdminControlador";
 import { AdminMiddleware } from "./middlewares/AdminMiddleware";
