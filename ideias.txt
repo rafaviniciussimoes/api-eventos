@@ -3,8 +3,10 @@ O que a minha api vai fazer:
     [OK] Cadastrar um evento
     [OK] Cadastrar uma compra
     [OK] Consultar os eventos
-    [OK] Consultar as compras de um usuario
     [OK] Consultar os usuarios
+    [OK] Consultar as compras
+    [OK] Consultar compras por id do usuario
+    [OK] Consultar compras por id do evento
     [OK] Deletar um compra
     [OK] Deletar um usuario
     [OK] Deletar um evento
@@ -42,6 +44,8 @@ O que a minha api vai fazer:
     
     [OK] Documentar a api com Swagger
 
-    [] Fazer pull para o meu repositório
+    [OK] Refatorar documentacao do swagger da rota listar compras
+
+    [OK] Fazer pull para o meu repositório
 
     [] Deploy da api no Render ou Vercel

@@ -54,7 +54,7 @@ export default class EventoControlador {
     res.json(eventoAtualizado);
   }
 
-  async excluirEvento(req: Request, res: Response) {
+  async deletarEvento(req: Request, res: Response) {
     const { idEvento } = req.params;
 
     await prisma.evento.delete({ where: { id: idEvento } });

@@ -8,7 +8,7 @@ import {
 import { prisma } from "../prisma";
 
 export default class EventoMiddleware {
-  async checarEvento(req: Request, res: Response, next: NextFunction) {
+  async checarCadastrarEvento(req: Request, res: Response, next: NextFunction) {
     const { nome, endereco, data, preco } = req.body;
 
     try {
@@ -34,7 +34,11 @@ export default class EventoMiddleware {
     }
   }
 
-  async checarEventoPorPreco(req: Request, res: Response, next: NextFunction) {
+  async checarListarEventoPorPreco(
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ) {
     const { maxPreco } = req.query;
 
     try {
@@ -107,6 +111,28 @@ export default class EventoMiddleware {
         erro instanceof InternalServerError
       ) {
         res.status(erro.statusCode).json({ mensagem: erro.message });
+      }
+    }
+  }
+
+  async checarIdEvento(req: Request, res: Response, next: NextFunction) {
+    const { idEvento } = req.query;
+
+    try {
+      if (idEvento) {
+        const usuario = await prisma.usuario.findMany({
+          where: { id: String(idEvento) },
+        });
+
+        if (!usuario) {
+          throw new NotFoundError("Evento não encontrado");
+        }
+      }
+
+      next();
+    } catch (erro) {
+      if (erro instanceof NotFoundError) {
+        res.status(erro.statusCode).json(erro.message);
       }
     }
   }

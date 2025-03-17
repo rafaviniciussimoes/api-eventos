@@ -47,7 +47,7 @@ export default class UsuarioControlador {
     res.json(usuarioAtualizado);
   }
 
-  async excluirUsuario(req: Request, res: Response): Promise<void> {
+  async deletarUsuario(req: Request, res: Response): Promise<void> {
     const { idUsuario } = req.params;
 
     await prisma.usuario.delete({ where: { id: idUsuario } });

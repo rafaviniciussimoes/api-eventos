@@ -26,40 +26,40 @@ rotas.post("/login", new GerarToken().token);
 rotas.use(new Autenticar().autenticar);
 
 // Listar usuarios
-rotas.get("/usuarios", new UsuarioControlador().listarUsuarios);
+rotas.get("/usuarios/listar", new UsuarioControlador().listarUsuarios);
 
 // Cadastrar usuarios
 rotas.post(
-  "/usuarios",
-  new UsuarioMiddleware().checarUsuario,
+  "/usuarios/cadastrar",
+  new UsuarioMiddleware().checarCadastrarUsuario,
   new UsuarioControlador().cadastrarUsuario
 );
 
 // Atualizar usuarios
 rotas.patch(
-  "/usuarios/:idUsuario?",
-  new UsuarioMiddleware().checaAtualizarUsuario,
+  "/usuarios/atualizar/:idUsuario?",
+  new UsuarioMiddleware().checarAtualizarUsuario,
   new UsuarioControlador().atualizarUsuario
 );
 
 // Deletar usuarios
 rotas.delete(
-  "/usuarios/:idUsuario?",
-  new UsuarioMiddleware().deletarUsuario,
-  new UsuarioControlador().excluirUsuario
+  "/usuarios/deletar/:idUsuario?",
+  new UsuarioMiddleware().checarDeletarUsuario,
+  new UsuarioControlador().deletarUsuario
 );
 
 // Listar eventos
 rotas.get(
   "/eventos/listar",
-  new EventoMiddleware().checarEventoPorPreco,
+  new EventoMiddleware().checarListarEventoPorPreco,
   new EventoControlador().listarEvento
 );
 
 // Cadastrar eventos
 rotas.post(
   "/eventos/cadastrar",
-  new EventoMiddleware().checarEvento,
+  new EventoMiddleware().checarCadastrarEvento,
   new EventoControlador().cadastrarEvento
 );
 
@@ -74,11 +74,16 @@ rotas.patch(
 rotas.delete(
   "/eventos/deletar/:idEvento?",
   new EventoMiddleware().checarDeletarEvento,
-  new EventoControlador().excluirEvento
+  new EventoControlador().deletarEvento
 );
 
-// Listar compras
-rotas.get("/compras/listar", new CompraControlador().listarCompras);
+// Listar todas as compras ou filtrar por eventos ou usuarios
+rotas.get(
+  "/compras/listar",
+  new UsuarioMiddleware().checarIdUsuario,
+  new EventoMiddleware().checarIdEvento,
+  new CompraControlador().listarCompras
+);
 
 // Cadastrar compras
 rotas.post(
@@ -88,7 +93,11 @@ rotas.post(
 );
 
 // Atualizar compras
-rotas.patch("/compras/:idCompra?", new CompraControlador().atualizarCompra);
+rotas.patch(
+  "/compras/atualizar/:idCompra?",
+  new CompraMiddleware().checarCompra,
+  new CompraControlador().atualizarCompra
+);
 
 // Deletar compras
 rotas.delete(

@@ -8,7 +8,11 @@ import {
 import { prisma } from "../prisma";
 
 export default class UsuarioMiddleware {
-  async checarUsuario(req: Request, res: Response, next: NextFunction) {
+  async checarCadastrarUsuario(
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ) {
     const { nome, email, senha } = req.body;
 
     try {
@@ -38,7 +42,11 @@ export default class UsuarioMiddleware {
     }
   }
 
-  async checaAtualizarUsuario(req: Request, res: Response, next: NextFunction) {
+  async checarAtualizarUsuario(
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ) {
     const { idUsuario } = req.params;
     const { nome, email, senha } = req.body;
 
@@ -69,7 +77,7 @@ export default class UsuarioMiddleware {
     }
   }
 
-  async deletarUsuario(req: Request, res: Response, next: NextFunction) {
+  async checarDeletarUsuario(req: Request, res: Response, next: NextFunction) {
     const { idUsuario } = req.params;
 
     try {
@@ -93,6 +101,28 @@ export default class UsuarioMiddleware {
         erro instanceof InternalServerError
       ) {
         res.status(erro.statusCode).json({ mensagem: erro.message });
+      }
+    }
+  }
+
+  async checarIdUsuario(req: Request, res: Response, next: NextFunction) {
+    const { idUsuario } = req.query;
+
+    try {
+      if (idUsuario) {
+        const usuario = await prisma.usuario.findUnique({
+          where: { id: String(idUsuario) },
+        });
+
+        if (!usuario) {
+          throw new NotFoundError("Usuário não encontrado");
+        }
+      }
+
+      next();
+    } catch (erro) {
+      if (erro instanceof NotFoundError) {
+        res.status(erro.statusCode).json(erro.message);
       }
     }
   }

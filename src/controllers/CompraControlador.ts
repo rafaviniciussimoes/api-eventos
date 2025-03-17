@@ -16,18 +16,24 @@ export default class CompraControlador {
   }
 
   async listarCompras(req: Request, res: Response): Promise<void> {
-    const { comprovante } = req.query;
+    const { idUsuario, idEvento } = req.query;
 
-    const idUsuario = String(comprovante).split("/")[1];
+    let compras = await prisma.compra.findMany();
 
-    const compras = await prisma.compra.findMany({
-      where: { id: idUsuario },
-    });
+    if (idUsuario) {
+      compras = await prisma.compra.findMany({
+        where: { usuarioId: String(idUsuario) },
+      });
+    }
+
+    if (idEvento) {
+      compras = await prisma.compra.findMany({
+        where: { eventoId: String(idEvento) },
+      });
+    }
 
     res.json(compras);
   }
-
-  async listarComprasPorUsuario() {}
 
   async atualizarCompra(req: Request, res: Response): Promise<void> {
     const { idCompra } = req.params;

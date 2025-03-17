@@ -622,7 +622,7 @@
         }
       }
     },
-    "usuarios/atualizar/{idUsuario}": {
+    "/usuarios/atualizar/{idUsuario}": {
       "patch": {
         "summary": "Atualizar usuários",
         "description": "Rota para atualizar um usuário",
@@ -733,7 +733,7 @@
         }
       }
     },
-    "usuarios/deletar/{idUsuario}": {
+    "/usuarios/deletar/{idUsuario}": {
       "delete": {
         "summary": "Deletar usuários",
         "description": "Rota para deletar um usuário",
@@ -789,7 +789,7 @@
         }
       }
     },
-    "compras/cadastrar": {
+    "/compras/cadastrar": {
       "post": {
         "summary": "Cadastro de compras",
         "description": "Rota para cadastrar uma compra",
@@ -875,12 +875,32 @@
         }
       }
     },
-    "compras/listar": {
+    "/compras/listar": {
       "get": {
         "summary": "Listar compras",
-        "description": "Rota para listar todas as compras",
+        "description": "Rota para listar todas as compras ou filtrar com usuários ou eventos",
         "tags": ["Compras"],
         "security": [{ "bearerAuth": [] }],
+        "parameters": [
+          {
+            "name": "idUsuario",
+            "in": "query",
+            "required": false,
+            "description": "Parâmetro de rota que representa o id do usuário",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "idEvento",
+            "in": "query",
+            "required": false,
+            "description": "Parâmetro de rota que representa o id do evento",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
         "responses": {
           "401": {
             "description": "Não autenticado",
@@ -898,15 +918,44 @@
               }
             }
           },
-          "200": {
-            "description": "OK",
+          "404": {
+            "description": "Elemento de filtro não encontrado",
             "content": {
               "application/json": {
-                "type": "object",
                 "schema": {
-                  "type": "array",
-                  "items": {
-                    "$ref": "#/components/schemas/Compras"
+                  "oneOf": [
+                    {
+                      "type": "object",
+                      "properties": {
+                        "error": {
+                          "type": "string",
+                          "example": "Usuário não encontrado no banco de dados"
+                        }
+                      }
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "error": {
+                          "type": "string",
+                          "example": "Evento não encontrado no banco de dados"
+                        }
+                      }
+                    }
+                  ]
+                }
+              }
+            },
+            "200": {
+              "description": "OK",
+              "content": {
+                "application/json": {
+                  "type": "object",
+                  "schema": {
+                    "type": "array",
+                    "items": {
+                      "$ref": "#/components/schemas/Compras"
+                    }
                   }
                 }
               }
@@ -915,7 +964,7 @@
         }
       }
     },
-    "compras/atualizar/{idCompra}": {
+    "/compras/atualizar/{idCompra}": {
       "patch": {
         "summary": "Atualizar compras",
         "description": "Rota para atualizar uma compra",
@@ -1025,7 +1074,7 @@
         }
       }
     },
-    "compras/deletar/{idCompra}": {
+    "/compras/deletar/{idCompra}": {
       "delete": {
         "summary": "Deletar compras",
         "description": "Rota para deletar uma compra",
@@ -1141,13 +1190,13 @@
           "email": { "type": "string", "example": "rafael@email.com" },
           "senha": { "type": "string", "example": "Rafael123" }
         }
-      },
-      "securitySchemes": {
-        "bearerAuth": {
-          "type": "http",
-          "scheme": "bearer",
-          "bearerFormat": "JWT"
-        }
+      }
+    },
+    "securitySchemes": {
+      "bearerAuth": {
+        "type": "http",
+        "scheme": "bearer",
+        "bearerFormat": "JWT"
       }
     }
   }
