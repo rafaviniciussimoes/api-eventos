@@ -38,7 +38,17 @@ O que a minha api vai fazer:
 
     [OK] Verificar se o token enviado é válido ou se está expirado
 
-    [] Refatorar código dentro do try/catch
+    [OK] Refatorar código dentro do try/catch
+
+    [] Implementar Refresh Tokens
+
+    [] Implementar papeis de usuarios (admin ou user)
+
+    [] Estudar as expressoes regulares utilizadas
+
+    [] Verificar o lançamento de excessões do AutenticacaoMiddleware
+
+    [] Implementar testes com Jest
 
     [] Verificar os tipos de valores enviados na requisição
     
