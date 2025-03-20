@@ -40,17 +40,7 @@ O que a minha api vai fazer:
 
     [OK] Refatorar código dentro do try/catch
 
-    [] Implementar Refresh Tokens
-
-    [] Implementar papeis de usuarios (admin ou user)
-
-    [] Estudar as expressoes regulares utilizadas
-
-    [] Verificar o lançamento de excessões do AutenticacaoMiddleware
-
     [] Implementar testes com Jest
-
-    [] Verificar os tipos de valores enviados na requisição
     
     [OK] Documentar a api com Swagger
 

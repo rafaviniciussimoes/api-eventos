@@ -51,12 +51,3 @@ export class InternalServerError extends Error {
     this.statusCode = 500;
   }
 }
-
-export class ValidationError extends Error {
-  readonly statusCode: number;
-
-  constructor(mensagem: string) {
-    super(mensagem);
-    this.statusCode = 400;
-  }
-}
