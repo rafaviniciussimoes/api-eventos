@@ -41,6 +41,8 @@ O que a minha api vai fazer:
     [OK] Refatorar código dentro do try/catch
 
     [] Implementar testes com Jest
+
+    [] Verificar como testar id no formato uuid e senha criptografadas com bcrypt
     
     [OK] Documentar a api com Swagger
 
