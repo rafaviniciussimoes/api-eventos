@@ -6,7 +6,7 @@ export default class UsuarioControlador {
   async listarUsuarios(req: Request, res: Response): Promise<void> {
     const usuarios = await prisma.usuario.findMany();
 
-    res.json(usuarios);
+    res.status(200).json(usuarios);
   }
 
   async cadastrarUsuario(req: Request, res: Response): Promise<void> {
@@ -52,6 +52,6 @@ export default class UsuarioControlador {
 
     await prisma.usuario.delete({ where: { id: idUsuario } });
 
-    res.status(204).send();
+    res.sendStatus(204);
   }
 }
