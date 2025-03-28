@@ -1,6 +1,6 @@
 services:
   postgres:
-    container_name: db_api_ingressos
+    container_name: db_api_eventos
     image: postgres:16-alpine
     environment:
       POSTGRES_USER: rafaelvinicius

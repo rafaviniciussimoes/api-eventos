@@ -1,7 +1,7 @@
 {
   "openapi": "3.0.0",
   "info": {
-    "title": "Api Ingressos",
+    "title": "Api Eventos",
     "description": "Essa api manipula eventos, usuários e compras como recursos.",
     "contact": {
       "email": "rafaelviniciussimoes@gmail.com"
