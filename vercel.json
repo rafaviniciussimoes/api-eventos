@@ -2,14 +2,13 @@
   "version": 2,
   "builds": [
     {
-      "src": "src/index.ts",
+      "src": "package.json",
       "use": "@vercel/node"
     }
   ],
-  "routes": [
-    {
-      "src": "(.*)",
-      "dest": "src/rotas.ts"
+  "build": {
+    "env": {
+      "PRISMA_GENERATE": "true"
     }
-  ]
+  }
 }
