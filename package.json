@@ -1,12 +1,12 @@
 {
-  "name": "api_ingressos",
+  "name": "api_eventos",
   "version": "1.0.0",
   "main": "index.js",
   "scripts": {
     "dev": "nodemon --exec ts-node src/index.ts",
     "build": "tsc",
     "start": "node dist/index.js",
-    "test": "jest"
+    "vercel-build": "npx prisma migrate deploy"
   },
   "keywords": [],
   "author": "",

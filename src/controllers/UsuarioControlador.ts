@@ -20,8 +20,6 @@ export default class UsuarioControlador {
       },
     });
 
-    console.log("Estou no controlador");
-
     res.status(201).json(usuario);
   }
 
